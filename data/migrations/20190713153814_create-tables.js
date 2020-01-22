@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema
     .createTable('users', tbl => {
       tbl.increments();
@@ -9,9 +9,12 @@ exports.up = function(knex) {
     .createTable('posts', tbl => {
       tbl.increments();
       tbl.text('contents');
+
+      //This right here is needed to make our posts table able to access the IDs in the users table.
       tbl.integer('user_id')
         .unsigned()
         .notNullable()
+        // These 4 lines are REQUIRED for foreign keys.
         .references('id')
         .inTable('users')
         .onUpdate('CASCADE')
@@ -19,7 +22,7 @@ exports.up = function(knex) {
     });
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema
     .dropTableIfExists('posts')
     .dropTableIfExists('users');
